@@ -1,7 +1,11 @@
 version: "3.8"
 services:
   app:
-    build: ./infra/php
+    build:
+      context: ./infra/php
+      dockerfile: Dockerfile
+    container_name: app_container
+    hostname: app_server
     volumes:
       - ./backend:/work
       - ./infra/php/:/var/phpapp/
@@ -9,6 +13,8 @@ services:
 
   web:
     image: nginx:1.18-alpine
+    container_name: web_container
+    hostname: web_server
     ports:
       - 10080:80
     volumes:
@@ -17,7 +23,13 @@ services:
     working_dir: /work
 
   db:
-    build: ./infra/mysql
+    build:
+      context: ./infra/mysql
+      dockerfile: Dockerfile
+    container_name: db_container
+    hostname: db_server
+    ports:
+      - 3306:3306
     volumes:
       - db-store:/var/lib/mysql
 
